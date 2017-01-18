@@ -1,8 +1,8 @@
 NAME=git
 VERSION=2.11.0
 EPOCH=1
-ITERATION=1
-PREFIX=/usr/local/git
+ITERATION=2
+PREFIX=/usr/local
 LICENSE=GPLv2
 VENDOR="Git contributors"
 MAINTAINER="Ryan Parman"
@@ -56,7 +56,7 @@ package:
 		make prefix=$(PREFIX) install DESTDIR=/tmp/installdir-$(NAME)-$(VERSION)
 	cd /tmp/installdir-$(NAME)-$(VERSION) && \
 		mkdir -p bin && \
-		ln -s /usr/local/git/bin/git bin/git
+		ln -s /usr/local/bin/git bin/git
 
 	# Main package
 	fpm \
@@ -80,7 +80,7 @@ package:
 		--rpm-os linux \
 		--rpm-dist el$(RHEL) \
 		--rpm-auto-add-directories \
-		usr/local/git/bin \
+		usr/local/bin \
 		bin \
 	;
 
@@ -105,8 +105,8 @@ package:
 		--rpm-os linux \
 		--rpm-dist el$(RHEL) \
 		--rpm-auto-add-directories \
-		usr/local/git/lib64 \
-		usr/local/git/libexec \
+		usr/local/lib64 \
+		usr/local/libexec \
 	;
 
 	# Documentation package
@@ -131,7 +131,7 @@ package:
 		--rpm-os linux \
 		--rpm-dist el$(RHEL) \
 		--rpm-auto-add-directories \
-		usr/local/git/share \
+		usr/local/share \
 	;
 
 	mv *.rpm /vagrant/repo/
