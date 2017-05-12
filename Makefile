@@ -7,7 +7,10 @@ VENDOR="Git contributors"
 MAINTAINER="Ryan Parman"
 DESCRIPTION="Fast Version Control System"
 URL=https://git-scm.com
-RHEL=$(shell rpm -q --queryformat '%{VERSION}' centos-release)
+EL=el
+RHEL=$(shell [[ -f /etc/centos-release ]] && rpm -q --queryformat '%{VERSION}' centos-release)
+ACTUALOS=$(osqueryi "select * from os_version;" --json | jq -r ".[].name")
+[[ "$ACTUALOS" == "Amazon Linux AMI" ]] && EL=alami
 
 .PHONY: package
 package:
@@ -20,6 +23,7 @@ package:
 	@ echo "MAINTAINER:    $(MAINTAINER)"
 	@ echo "DESCRIPTION:   $(DESCRIPTION)"
 	@ echo "URL:           $(URL)"
+	@ echo "OS:            $(ACTUALOS)"
 	@ echo "RHEL:          $(RHEL)"
 	@ echo " "
 
@@ -30,10 +34,12 @@ package:
 	yum -y install \
 		asciidoc \
 		expat-devel \
+		gettext-devel \
 		libcurl-devel \
 		openssl-devel \
 		pcre-devel \
 		perl-ExtUtils-MakeMaker \
+		tcl \
 		zlib-devel \
 	;
 
@@ -76,7 +82,7 @@ package:
 		--rpm-digest md5 \
 		--rpm-compression gzip \
 		--rpm-os linux \
-		--rpm-dist el$(RHEL) \
+		--rpm-dist $(EL)$(RHEL) \
 		--rpm-auto-add-directories \
 		usr/local/bin \
 		bin \
@@ -100,7 +106,7 @@ package:
 		--rpm-digest md5 \
 		--rpm-compression gzip \
 		--rpm-os linux \
-		--rpm-dist el$(RHEL) \
+		--rpm-dist $(EL)$(RHEL) \
 		--rpm-auto-add-directories \
 		usr/local/lib64 \
 		usr/local/libexec \
@@ -125,7 +131,7 @@ package:
 		--rpm-digest md5 \
 		--rpm-compression gzip \
 		--rpm-os linux \
-		--rpm-dist el$(RHEL) \
+		--rpm-dist $(EL)$(RHEL) \
 		--rpm-auto-add-directories \
 		usr/local/share \
 	;
