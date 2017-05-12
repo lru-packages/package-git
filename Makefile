@@ -23,6 +23,7 @@ package:
 	@ echo "DESCRIPTION:   $(DESCRIPTION)"
 	@ echo "URL:           $(URL)"
 	@ echo "OS:            $(ACTUALOS)"
+	@ echo "EL:            $(EL)"
 	@ echo "RHEL:          $(RHEL)"
 	@ echo " "
 
@@ -64,7 +65,7 @@ package:
 
 	# Main package
 	fpm \
-		-d "$(NAME)-libs = :$(VERSION)-$(ITERATION).$(EL)$(RHEL)" \
+		-d "$(NAME)-libs = $(VERSION)-$(ITERATION).$(EL)$(RHEL)" \
 		-s dir \
 		-t rpm \
 		-n $(NAME) \
@@ -113,7 +114,7 @@ package:
 
 	# Documentation package
 	fpm \
-		-d "$(NAME) = $(VERSION)-$(ITERATION).el$(RHEL)" \
+		-d "$(NAME) = $(VERSION)-$(ITERATION).$(EL)$(RHEL)" \
 		-s dir \
 		-t rpm \
 		-n $(NAME)-doc \
@@ -135,4 +136,4 @@ package:
 		usr/local/share \
 	;
 
-	mv *.rpm /vagrant/repo/
+	[[ -d /vagrant/repo ]] && mv *.rpm /vagrant/repo/
