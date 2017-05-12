@@ -10,7 +10,7 @@ URL=https://git-scm.com
 EL=el
 RHEL=$(shell [[ -f /etc/centos-release ]] && rpm -q --queryformat '%{VERSION}' centos-release)
 ACTUALOS=$(shell osqueryi "select * from os_version;" --json | jq -r ".[].name")
-if [[ "$ACTUALOS" == "Amazon Linux AMI" ]]; then EL=alami; fi;
+shell if [[ "$ACTUALOS" == "Amazon Linux AMI" ]]; then EL=alami; fi;
 
 .PHONY: package
 package:
