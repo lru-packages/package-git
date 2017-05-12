@@ -7,10 +7,9 @@ VENDOR="Git contributors"
 MAINTAINER="Ryan Parman"
 DESCRIPTION="Fast Version Control System"
 URL=https://git-scm.com
-EL=el
-RHEL=$(shell [[ -f /etc/centos-release ]] && rpm -q --queryformat '%{VERSION}' centos-release)
 ACTUALOS=$(shell osqueryi "select * from os_version;" --json | jq -r ".[].name")
-shell if [[ "$ACTUALOS" == "Amazon Linux AMI" ]]; then EL=alami; fi;
+EL=$(shell if [[ "$ACTUALOS" == "Amazon Linux AMI" ]]; then echo alami; else echo el; fi)
+RHEL=$(shell [[ -f /etc/centos-release ]] && rpm -q --queryformat '%{VERSION}' centos-release)
 
 .PHONY: package
 package:
