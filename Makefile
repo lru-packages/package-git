@@ -10,7 +10,7 @@ URL=https://git-scm.com
 EL=el
 RHEL=$(shell [[ -f /etc/centos-release ]] && rpm -q --queryformat '%{VERSION}' centos-release)
 ACTUALOS=$(shell osqueryi "select * from os_version;" --json | jq -r ".[].name")
-$(shell [[ "$ACTUALOS" == "Amazon Linux AMI" ]] && EL=alami)
+if [[ "$ACTUALOS" == "Amazon Linux AMI" ]]; then EL=alami; fi;
 
 .PHONY: package
 package:
@@ -65,7 +65,7 @@ package:
 
 	# Main package
 	fpm \
-		-d "$(NAME)-libs = $(EPOCH):$(VERSION)-$(ITERATION).el$(RHEL)" \
+		-d "$(NAME)-libs = :$(VERSION)-$(ITERATION).$(EL)$(RHEL)" \
 		-s dir \
 		-t rpm \
 		-n $(NAME) \
@@ -114,7 +114,7 @@ package:
 
 	# Documentation package
 	fpm \
-		-d "$(NAME) = $(EPOCH):$(VERSION)-$(ITERATION).el$(RHEL)" \
+		-d "$(NAME) = $(VERSION)-$(ITERATION).el$(RHEL)" \
 		-s dir \
 		-t rpm \
 		-n $(NAME)-doc \
